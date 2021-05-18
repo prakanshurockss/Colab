@@ -1,0 +1,421 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled3.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyNT7uKbf92orNTjJAn4j/so",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/prakanshurockss/Colab/blob/main/analysis%20report%20v2\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "yeo2kUPWPGHl"
+      },
+      "source": [
+        "pip install pandas-profiling==2.7.1 "
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "GZ7NMFYCJmC4"
+      },
+      "source": [
+        "import pandas as pd\n",
+        "import pandas_profiling\n",
+        "import numpy as np\n",
+        "from pandas_profiling import ProfileReport\n",
+        "\n"
+      ],
+      "execution_count": 47,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "2PrCO6iWMr_2"
+      },
+      "source": [
+        "df=pd.read_csv('training_datapp.csv')\n",
+        "print(df)\n"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Sd2kT2RmNHDh"
+      },
+      "source": [
+        "#generate profile report\n",
+        "profile= ProfileReport(df)\n",
+        "profile.to_file(output_file=\"profile1.html\")"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "qGRDGQk7MXrH"
+      },
+      "source": [
+        "# Read in data and display first 5 rows\n",
+        "features = pd.read_csv('training_datapp.csv')\n",
+        "\n",
+        "features.head(10000)\n",
+        "type(features)"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Ra_TtK5zMTbn"
+      },
+      "source": [
+        "print('The shape of our features is:', features.shape)"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "EuMMkLwxuiq9"
+      },
+      "source": [
+        "# Descriptive statistics for each column\n",
+        "features.describe()\n",
+        "type(features)"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "yavDYX5RvO4d"
+      },
+      "source": [
+        "\n",
+        "\n",
+        "# One-hot encode the data using pandas get_dummies\n",
+        "features = pd.get_dummies(features)\n",
+        "\n",
+        "# Display the first 5 rows of the last 12 columns\n",
+        "features.iloc[:,:].head(10000)"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "0s3A9i_SdbUr",
+        "outputId": "ac3859d3-48a3-4ea5-b660-edf084a7ef91"
+      },
+      "source": [
+        "type(features)\n",
+        "#features.iloc[:,4].head(10000)"
+      ],
+      "execution_count": 94,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "pandas.core.frame.DataFrame"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 94
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "9FZqZK74fqwu"
+      },
+      "source": [
+        "labels = np.array(features['gender'])\n",
+        "\n",
+        "# Remove the labels from the features\n",
+        "# axis 1 refers to the columns\n",
+        "features= features.drop('gender', axis = 1)\n",
+        "\n",
+        "# Saving feature names for later use\n",
+        "feature_list = list(features.columns)\n",
+        "\n",
+        "# Convert to numpy array\n",
+        "features = np.array(features)"
+      ],
+      "execution_count": 95,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "RdrQpDpWf6D-"
+      },
+      "source": [
+        "type(features)"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "PzO4QqOCgLGI"
+      },
+      "source": [
+        "# Using Skicit-learn to split data into training and testing sets\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "\n",
+        "# Split the data into training and testing sets\n",
+        "train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size = 0.25, random_state = 42)"
+      ],
+      "execution_count": 97,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "o5ptILGVggFd",
+        "outputId": "702d83f7-b457-4aad-abc6-868dedb86598"
+      },
+      "source": [
+        "print('Training Features Shape:', train_features.shape)\n",
+        "print('Training Labels Shape:', train_labels.shape)\n",
+        "print('Testing Features Shape:', test_features.shape)\n",
+        "print('Testing Labels Shape:', test_labels.shape)\n"
+      ],
+      "execution_count": 98,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Training Features Shape: (7500, 12)\n",
+            "Training Labels Shape: (7500,)\n",
+            "Testing Features Shape: (2500, 12)\n",
+            "Testing Labels Shape: (2500,)\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "HaBu6zlGgswR",
+        "outputId": "ad7d2e05-56ae-4175-ae86-52432da821dd"
+      },
+      "source": [
+        "# The baseline predictions are the historical averages\n",
+        "baseline_preds = test_features[:, feature_list.index('reference_high')]\n",
+        "\n",
+        "# Baseline errors, and display average baseline error\n",
+        "baseline_errors = abs(baseline_preds - test_labels)\n",
+        "\n",
+        "print('Average baseline error: ', round(np.mean(baseline_errors), 2))\n"
+      ],
+      "execution_count": 99,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Average baseline error:  407.69\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "gIp6BPimhJXH"
+      },
+      "source": [
+        "# Import the model we are using\n",
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "\n",
+        "# Instantiate model with 10 decision trees\n",
+        "rf = RandomForestClassifier(n_estimators = 10, random_state = 5)\n",
+        "\n",
+        "# Train the model on training data\n",
+        "rf.fit(train_features, train_labels);"
+      ],
+      "execution_count": 109,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LiGWNYiDhdHT",
+        "outputId": "47098460-7df9-4690-9b8e-c8f1c332c02f"
+      },
+      "source": [
+        "# Use the forest's predict method on the test data\n",
+        "predictions = rf.predict(test_features)\n",
+        "\n",
+        "# Calculate the absolute errors\n",
+        "errors = abs(predictions - test_labels)\n",
+        "\n",
+        "print(predictions)\n",
+        "\n",
+        "# Print out the mean absolute error (mae)\n",
+        "print('Mean Absolute Error:', round(np.mean(errors), 2))\n",
+        "\n"
+      ],
+      "execution_count": 113,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[1 1 0 ... 1 1 1]\n",
+            "Mean Absolute Error: 0.13\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 395
+        },
+        "id": "HFRcYJfMopja",
+        "outputId": "ba01f432-4c60-43a3-e3d5-6f7092201df4"
+      },
+      "source": [
+        "from sklearn.metrics import roc_curve,auc \n",
+        "f_p_r,t_p_r,t=roc_curve(test_features,test_labels)\n",
+        "roc_auc=auc(f_p_r,t_p_r)\n",
+        "roc_auc\n"
+      ],
+      "execution_count": 115,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "ValueError",
+          "evalue": "ignored",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-115-c4033b34b599>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0msklearn\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mmetrics\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mroc_curve\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mauc\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mf_p_r\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mt_p_r\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mt\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mroc_curve\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtest_features\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mtest_labels\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      3\u001b[0m \u001b[0mroc_auc\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mauc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mf_p_r\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mt_p_r\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0mroc_auc\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.7/dist-packages/sklearn/metrics/_ranking.py\u001b[0m in \u001b[0;36mroc_curve\u001b[0;34m(y_true, y_score, pos_label, sample_weight, drop_intermediate)\u001b[0m\n\u001b[1;32m    769\u001b[0m     \"\"\"\n\u001b[1;32m    770\u001b[0m     fps, tps, thresholds = _binary_clf_curve(\n\u001b[0;32m--> 771\u001b[0;31m         y_true, y_score, pos_label=pos_label, sample_weight=sample_weight)\n\u001b[0m\u001b[1;32m    772\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    773\u001b[0m     \u001b[0;31m# Attempt to drop thresholds corresponding to points in between and\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.7/dist-packages/sklearn/metrics/_ranking.py\u001b[0m in \u001b[0;36m_binary_clf_curve\u001b[0;34m(y_true, y_score, pos_label, sample_weight)\u001b[0m\n\u001b[1;32m    534\u001b[0m     if not (y_type == \"binary\" or\n\u001b[1;32m    535\u001b[0m             (y_type == \"multiclass\" and pos_label is not None)):\n\u001b[0;32m--> 536\u001b[0;31m         \u001b[0;32mraise\u001b[0m \u001b[0mValueError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"{0} format is not supported\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mformat\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0my_type\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    537\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    538\u001b[0m     \u001b[0mcheck_consistent_length\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0my_true\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0my_score\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0msample_weight\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mValueError\u001b[0m: continuous-multioutput format is not supported"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 376
+        },
+        "id": "xQ9rDB4khnJc",
+        "outputId": "0956cf86-6ff2-47a8-a5ac-48f1dcac847a"
+      },
+      "source": [
+        "from sklearn.metrics import classification_report, confusion_matrix, accuracy_score\n",
+        "\n",
+        "#print(confusion_matrix(test_features,test_labels))\n",
+        "#print(classification_report(test_features,test_labels))\n",
+        "print(accuracy_score(test_features, test_labels))"
+      ],
+      "execution_count": 104,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "ValueError",
+          "evalue": "ignored",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-104-b025664e125a>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0;31m#print(confusion_matrix(test_features,test_labels))\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0;31m#print(classification_report(test_features,test_labels))\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 5\u001b[0;31m \u001b[0mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0maccuracy_score\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtest_features\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtest_labels\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;32m/usr/local/lib/python3.7/dist-packages/sklearn/metrics/_classification.py\u001b[0m in \u001b[0;36maccuracy_score\u001b[0;34m(y_true, y_pred, normalize, sample_weight)\u001b[0m\n\u001b[1;32m    183\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    184\u001b[0m     \u001b[0;31m# Compute accuracy for each possible representation\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 185\u001b[0;31m     \u001b[0my_type\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0my_true\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0my_pred\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0m_check_targets\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0my_true\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0my_pred\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    186\u001b[0m     \u001b[0mcheck_consistent_length\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0my_true\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0my_pred\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0msample_weight\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    187\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0my_type\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mstartswith\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'multilabel'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.7/dist-packages/sklearn/metrics/_classification.py\u001b[0m in \u001b[0;36m_check_targets\u001b[0;34m(y_true, y_pred)\u001b[0m\n\u001b[1;32m     88\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0mlen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0my_type\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m>\u001b[0m \u001b[0;36m1\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     89\u001b[0m         raise ValueError(\"Classification metrics can't handle a mix of {0} \"\n\u001b[0;32m---> 90\u001b[0;31m                          \"and {1} targets\".format(type_true, type_pred))\n\u001b[0m\u001b[1;32m     91\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     92\u001b[0m     \u001b[0;31m# We can't have more than one value on y_type => The set is no more needed\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mValueError\u001b[0m: Classification metrics can't handle a mix of continuous-multioutput and binary targets"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "FPN70YbLiJTc"
+      },
+      "source": [
+        "# Import tools needed for visualization\n",
+        "from sklearn.tree import export_graphviz\n",
+        "import pydot\n",
+        "# Pull out one tree from the forest\n",
+        "tree = rf.estimators_[5]\n",
+        "\n",
+        "# Import tools needed for visualization\n",
+        "from sklearn.tree import export_graphviz\n",
+        "import pydot\n",
+        "# Pull out one tree from the forest\n",
+        "tree = rf.estimators_[5]\n",
+        "\n",
+        "# Export the image to a dot file\n",
+        "export_graphviz(tree, out_file = 'tree.dot', feature_names = feature_list, rounded = True, precision = 1)\n",
+        "# Use dot file to create a graph\n",
+        "(graph, ) = pydot.graph_from_dot_file('tree.dot')\n",
+        "\n",
+        "# Write graph to a png file\n",
+        "graph.write_png('tree.png')"
+      ],
+      "execution_count": 89,
+      "outputs": []
+    }
+  ]
+}
